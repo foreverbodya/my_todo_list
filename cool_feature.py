@@ -46,12 +46,10 @@ my_tasks = load_tasks("load_file.json")
 if my_tasks:
     print(f"Загружено задач: {len(my_tasks)}")
 
-    # Возьмем первую задачу
     first_task = my_tasks[0]
 
-    # И можем работать с ней как с объектом!
-    print(f"Первая задача: {first_task}") # сработает __repr__
-    print(f"Ее имя: {first_task.name}")
-    print(f"Ее статус: {first_task.status}")
+    print(f"Первая таска: {first_task}")
+    print(f"Название: {first_task.name}")
+    print(f"Статус: {first_task.status}")
 else:
     print("Не удалось загрузить задачи или файл пуст.")

@@ -31,25 +31,43 @@ class TodoItem():
 
 
 
+class TodoList:
+    def __init__(self, load_file = "" ):
+        self.load_file = load_file
+        self.tasks = None
+        self.load_tasks()
 
-def load_tasks(load_file):
-    with open(load_file, 'r', encoding='utf-8') as f:
-        list_of_dicts = json.load(f)
-    task_as_objects = [TodoItem.from_dict(d) for d in list_of_dicts]
-    return task_as_objects
+    def __len__(self):
+        return len(self.tasks) if self.tasks != None else 0
+
+    def load_tasks(self):
+
+        try:
+            with open(self.load_file, 'r', encoding='utf-8') as f:
+                list_of_dicts = json.load(f)
+            self.tasks = [TodoItem.from_dict(d) for d in list_of_dicts]
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.tasks = []
+
+        return self.tasks    
+
+    def save_tasks(self):
+        with open(self.load_file, 'w', encoding='utf-8') as f:
+            json.dump([item.to_dict() for item in self.tasks], f, ensure_ascii=False, indent=4)  
+
 
 # load_tasks()
 
-print("Загружаем задачи из файла...")
-my_tasks = load_tasks("load_file.json")
+todo_list = TodoList("load_file.json")
 
-if my_tasks:
-    print(f"Загружено задач: {len(my_tasks)}")
 
-    first_task = my_tasks[0]
+print(f"\nЗагружено задач: {len(todo_list)} \n")
 
-    print(f"Первая таска: {first_task}")
-    print(f"Название: {first_task.name}")
-    print(f"Статус: {first_task.status}")
-else:
-    print("Не удалось загрузить задачи или файл пуст.")
+
+for i,task in enumerate(todo_list.tasks):
+    print(f"Задача: {i+1} {task.name}")
+    print(f"Описание: {task.description}")
+    print(f"Статус: {task.status} \n")
+
+
+todo_list.save_tasks()
